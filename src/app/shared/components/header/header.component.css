@@ -1,0 +1,196 @@
+/* header.component.css - Fintech Design */
+.header {
+  background: #ffffff;
+  color: #0a0e27;
+  padding: 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 72px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0a0e27;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-link {
+  color: #4b5563;
+  text-decoration: none;
+  padding: 0.625rem 1.25rem;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: #0a0e27;
+  background-color: #f9fafb;
+}
+
+.nav-link.active {
+  color: #0a0e27;
+  background-color: transparent;
+  font-weight: 600;
+}
+
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  bottom: -21px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background-color: #1e2952;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: 2rem;
+  padding-left: 2rem;
+  border-left: 1px solid #e5e7eb;
+}
+
+.welcome {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.logout-btn {
+  background-color: #0a0e27;
+  color: white;
+  border: none;
+  padding: 0.625rem 1.5rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logout-btn:hover {
+  background-color: #1e2952;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 41, 82, 0.2);
+}
+
+.login-link {
+  background-color: #1e2952;
+  color: white !important;
+  font-weight: 500;
+}
+
+.login-link:hover {
+  background-color: #0a0e27 !important;
+  color: white !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(30, 41, 82, 0.2);
+}
+
+/* Mobile menu (burger) */
+.mobile-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.mobile-menu-toggle span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: #0a0e27;
+  margin: 5px 0;
+  transition: 0.3s;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .nav {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+  }
+
+  .nav.active {
+    display: block;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    padding: 1rem 0;
+  }
+
+  .user-section {
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    padding-left: 0;
+    padding-top: 1rem;
+    margin-left: 0;
+    margin-top: 1rem;
+    flex-direction: column;
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .nav-link {
+    width: 100%;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 0;
+  }
+
+  .nav-link.active::after {
+    display: none;
+  }
+}

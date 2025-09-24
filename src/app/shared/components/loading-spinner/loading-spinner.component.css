@@ -1,0 +1,188 @@
+/* loading-spinner.component.css - Fintech Design */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  min-height: 200px;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.spinner::before,
+.spinner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+}
+
+.spinner::before {
+  border-top-color: #1e2952;
+  animation: rotate 0.8s linear infinite;
+}
+
+.spinner::after {
+  border-bottom-color: #0a0e27;
+  animation: rotate 1.2s linear infinite reverse;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-spinner p {
+  margin-top: 1.5rem;
+  color: #6b7280;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* Alternative minimal spinner design */
+.loading-spinner.minimal .spinner {
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #1e2952;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.loading-spinner.minimal .spinner::before,
+.loading-spinner.minimal .spinner::after {
+  display: none;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Full page loader overlay */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  backdrop-filter: blur(2px);
+}
+
+.loading-overlay .loading-spinner {
+  background: white;
+  padding: 3rem;
+  border-radius: 2px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Inline loader for buttons */
+.btn-loader {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+}
+
+/* Progress bar variant */
+.progress-loader {
+  width: 100%;
+  height: 3px;
+  background: #e5e7eb;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.progress-loader::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, #1e2952, transparent);
+  animation: loading-progress 1.5s ease-in-out infinite;
+}
+
+@keyframes loading-progress {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Skeleton loader for content */
+.skeleton-loader {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: loading-skeleton 1.5s ease-in-out infinite;
+  border-radius: 2px;
+}
+
+@keyframes loading-skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .loading-spinner {
+    padding: 2rem;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+  }
+}

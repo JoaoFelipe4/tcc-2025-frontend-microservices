@@ -1,0 +1,26 @@
+<!-- src/app/shared/components/header/header.component.html -->
+<header class="header">
+  <div class="container">
+    <div class="logo">
+      <h1>Meu App</h1>
+    </div>
+    
+    <nav class="nav">
+      <div class="nav-links">
+        <a routerLink="/home" routerLinkActive="active" class="nav-link">Home</a>
+        <a routerLink="/sobre" routerLinkActive="active" class="nav-link">Sobre</a>
+        
+        <!-- Usar safe navigation operator ? -->
+        <div class="user-section" *ngIf="isAuthenticated && currentUser">
+          <span class="welcome">Olá, {{ currentUser.name }}</span>
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+          <button (click)="logout()" class="logout-btn">Sair</button>
+        </div>
+        
+        <div class="auth-section" *ngIf="!isAuthenticated">
+          <a routerLink="/login" routerLinkActive="active" class="nav-link login-link">Login</a>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>

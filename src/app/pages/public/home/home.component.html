@@ -1,0 +1,25 @@
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>Bem-vindo ao Meu App</h1>
+      <p>Uma aplicação moderna desenvolvida em Angular com recursos incríveis.</p>
+      <div class="hero-actions">
+        <a routerLink="/sobre" class="btn btn-primary">Saiba Mais</a>
+        <a routerLink="/login" class="btn btn-secondary">Fazer Login</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <h2>Recursos Principais</h2>
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of features">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>

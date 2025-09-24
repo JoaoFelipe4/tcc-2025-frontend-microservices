@@ -1,0 +1,242 @@
+/* footer.component.css - Fintech Design */
+.footer {
+  background: #0a0e27;
+  color: #ffffff;
+  padding: 4rem 0 2rem;
+  margin-top: auto;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #1e2952;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-section h3 {
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background: #1e2952;
+}
+
+.footer-section p {
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+  font-size: 0.9375rem;
+  color: #9ca3af;
+}
+
+.footer-links {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.875rem;
+}
+
+.footer-links a {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  font-size: 0.9375rem;
+  font-weight: 400;
+}
+
+.footer-links a:hover {
+  color: #ffffff;
+  transform: translateX(4px);
+}
+
+.footer-links a::before {
+  content: '—';
+  margin-right: 12px;
+  font-size: 0.75rem;
+  color: #1e2952;
+}
+
+.social-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: #1e2952;
+  border-radius: 2px;
+  color: white;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.social-link:hover {
+  background: #2c3e75;
+  transform: translateY(-2px);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: #9ca3af;
+  font-size: 0.9375rem;
+}
+
+.contact-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: #1e2952;
+  border-radius: 2px;
+  flex-shrink: 0;
+  font-size: 1rem;
+}
+
+.contact-item span {
+  font-size: 0.9375rem;
+}
+
+.footer-bottom {
+  border-top: 1px solid #1e2952;
+  padding-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.copyright {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.copyright p {
+  margin: 0;
+}
+
+.footer-menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.footer-menu a {
+  color: #6b7280;
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+  font-weight: 400;
+}
+
+.footer-menu a:hover {
+  color: #ffffff;
+}
+
+/* Legal Disclaimer */
+.legal-disclaimer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #1e2952;
+  text-align: center;
+}
+
+.legal-disclaimer p {
+  font-size: 0.75rem;
+  color: #4b5563;
+  line-height: 1.6;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    padding: 3rem 0 1.5rem;
+  }
+
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .footer-menu {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-menu {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+}

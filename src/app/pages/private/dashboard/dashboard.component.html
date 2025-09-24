@@ -1,0 +1,56 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h1>Dashboard</h1>
+    <p>Bem-vindo, {{ currentUser?.name }}!</p>
+  </div>
+
+  <section class="stats-section">
+    <h2>Estatísticas</h2>
+    <div class="stats-grid">
+      <div class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-icon">{{ stat.icon }}</div>
+        <div class="stat-info">
+          <h3>{{ stat.title }}</h3>
+          <p class="stat-value">{{ stat.value }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="dashboard-content">
+    <section class="recent-activities">
+      <h2>Atividades Recentes</h2>
+      <div class="activities-list">
+        <div class="activity-item" *ngFor="let activity of recentActivities">
+          <div class="activity-dot"></div>
+          <div class="activity-content">
+            <p class="activity-action">{{ activity.action }}</p>
+            <span class="activity-time">{{ activity.time }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-actions">
+      <h2>Ações Rápidas</h2>
+      <div class="actions-grid">
+        <button class="action-btn">
+          <span class="action-icon">➕</span>
+          <span>Novo Usuário</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">📊</span>
+          <span>Relatórios</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">⚙️</span>
+          <span>Configurações</span>
+        </button>
+        <button class="action-btn">
+          <span class="action-icon">👥</span>
+          <span>Equipe</span>
+        </button>
+      </div>
+    </section>
+  </div>
+</div>
