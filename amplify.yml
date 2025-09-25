@@ -1,5 +1,5 @@
 version: 1
 redirects:
   - source: /<*> 
-    target: /src/index.html
+    target: /index.html
     status: 200
