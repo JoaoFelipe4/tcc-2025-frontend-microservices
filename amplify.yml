@@ -8,7 +8,3 @@ frontend:
       commands:
         - npm run build
         # O comando abaixo é crucial para Angular 19+ com SSR. Se sua versão for anterior ou não usar SSR, você pode removê-lo.
-  artifacts:
-    baseDirectory: dist/frontend/browser
-    files:
-      - '**/*'
