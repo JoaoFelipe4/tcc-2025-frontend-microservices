@@ -8,7 +8,6 @@ frontend:
       commands:
         - npm run build
         # O comando abaixo é crucial para Angular 19+ com SSR. Se sua versão for anterior ou não usar SSR, você pode removê-lo.
-        - cp dist/tcc-2025-frontend/browser/index.csr.html dist/tcc-2025-frontend/browser/index.html
   artifacts:
     baseDirectory: dist/tcc-2025-frontend/browser
     files:
