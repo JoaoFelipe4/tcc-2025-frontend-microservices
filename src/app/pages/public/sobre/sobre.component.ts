@@ -22,8 +22,8 @@ interface TeamMember {
 })
 export class SobreComponent {
   teamMembers: TeamMember[] = [
-    { name: 'João Silva', role: 'Desenvolvedor Frontend' },
-    { name: 'Maria Santos', role: 'UX Designer' },
-    { name: 'Pedro Oliveira', role: 'Backend Developer' }
+    { name: 'Elma Maria', role: 'Desenvolvedor Frontend' },
+    { name: 'Samara Angela', role: 'UX Designer' },
+    { name: 'Deide Costa', role: 'Backend Developer' }
   ];
 }
