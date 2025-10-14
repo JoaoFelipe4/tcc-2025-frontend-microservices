@@ -12,7 +12,7 @@
         
         <!-- Usar safe navigation operator ? -->
         <div class="user-section" *ngIf="isAuthenticated && currentUser">
-          <span class="welcome">Olá, {{ currentUser.name }}</span>
+          <span class="welcome">Olá, {{ currentUser.firstName }}</span>
           <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
           <button (click)="logout()" class="logout-btn">Sair</button>
         </div>

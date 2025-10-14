@@ -1,53 +1,93 @@
-import { Injectable } from '@angular/core';
+// auth.service.ts
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { User } from '../../shared/models/user.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+interface LoginResponse {
+  success: boolean;
+  token: string;
+  user: {
+    id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+  };
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly AUTH_KEY = 'auth_token';
-  private readonly USER_KEY = 'user_data';
+  private http = inject(HttpClient);
+  private router = inject(Router);
+  
+  private apiUrl = 'http://3.133.126.225/api';
+  private currentUserSubject = new BehaviorSubject<any>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
+  
+  constructor() {
+    this.initializeAuthState();
+  }
 
-  constructor(private router: Router) {}
-
-  isBrowser(): boolean {
-  return typeof window !== 'undefined' && !!window.localStorage;
-}
-
-login(email: string, password: string): boolean {
-  if (email === 'admin@email.com' && password === '123456') {
-    const user: User = {
-      id: 1,
-      name: 'Administrador',
-      email: email
-    };
-    
-    if (this.isBrowser()) {
-      localStorage.setItem(this.AUTH_KEY, 'fake-jwt-token');
-      localStorage.setItem(this.USER_KEY, JSON.stringify(user));
+  private initializeAuthState(): void {
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const userData = localStorage.getItem('user_data');
+      const token = localStorage.getItem('auth_token');
+      
+      if (userData && token) {
+        console.log('Initializing auth state from localStorage:', JSON.parse(userData));
+        this.currentUserSubject.next(JSON.parse(userData));
+      } else {
+        console.log('No auth data found in localStorage');
+        this.currentUserSubject.next(null);
+      }
     }
-    return true;
   }
-  return false;
-}
-
-logout(): void {
-  if (this.isBrowser()) {
-    localStorage.removeItem(this.AUTH_KEY);
-    localStorage.removeItem(this.USER_KEY);
+  
+  login(email: string, password: string): Observable<LoginResponse> {
+    console.log('AuthService: Login attempt for:', email);
+    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+      tap(response => {
+        console.log('AuthService: Login response:', response);
+        if (response.success && typeof window !== 'undefined') {
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('user_data', JSON.stringify(response.user));
+          console.log('AuthService: Setting current user to:', response.user);
+          this.currentUserSubject.next(response.user);
+        }
+      })
+    );
   }
-  this.router.navigate(['/login']);
-}
+  
+  logout(): void {
+    console.log('AuthService: Logging out');
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_data');
+    }
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
+  }
+  
+  isAuthenticated(): boolean {
+    if (typeof window === 'undefined') return false;
+    return !!localStorage.getItem('auth_token');
+  }
+  
+  getToken(): string | null {
+    if (typeof window === 'undefined') return null;
+    return localStorage.getItem('auth_token');
+  }
+  
+  getCurrentUser(): any {
+    return this.currentUserSubject.value;
+  }
 
-isAuthenticated(): boolean {
-  if (!this.isBrowser()) return false;
-  return !!localStorage.getItem(this.AUTH_KEY);
-}
-
-getCurrentUser(): User | null {
-  if (!this.isBrowser()) return null;
-  const userStr = localStorage.getItem(this.USER_KEY);
-  return userStr ? JSON.parse(userStr) : null;
-}
+  // Helper method to manually trigger state check
+  checkAuthState(): void {
+    this.initializeAuthState();
+  }
 }
