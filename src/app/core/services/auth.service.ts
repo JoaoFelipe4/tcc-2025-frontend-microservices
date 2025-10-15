@@ -24,7 +24,7 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  private apiUrl = 'http://3.133.126.225/api';
+  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/';
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   
@@ -49,7 +49,7 @@ export class AuthService {
   
   login(email: string, password: string): Observable<LoginResponse> {
     console.log('AuthService: Login attempt for:', email);
-    return this.http.post<LoginResponse>(`${this.apiUrl}/auth/login`, { email, password }).pipe(
+    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap(response => {
         console.log('AuthService: Login response:', response);
         if (response.success && typeof window !== 'undefined') {
