@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
   error: string = '';
 
   // 🎯 API CONFIGURATION - SET YOUR BASE URL HERE
-  private apiBaseUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init'; // Change this to your API URL
+  private apiBaseUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init/'; // Change this to your API URL
 
   constructor(private http: HttpClient) {}
 
