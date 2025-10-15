@@ -34,7 +34,7 @@ export class LoginComponent {
   successMessage = '';
   
   // API configuration - adjust this to your backend
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com'; // Change to your backend URL
+  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init'; // Change to your backend URL
   
   // Main login method - async/await pattern for Vite
   async login(): Promise<void> {
@@ -53,7 +53,7 @@ export class LoginComponent {
     try {
       // Make API call using firstValueFrom for async/await
       const response = await firstValueFrom(
-        this.http.post<any>(`${this.apiUrl}/login`, {
+        this.http.post<any>(this.apiUrl, {
           email: this.credentials.email.trim().toLowerCase(),
           password: this.credentials.password
         })
@@ -87,7 +87,7 @@ export class LoginComponent {
       password: this.credentials.password
     };
     
-    this.http.post<any>(`${this.apiUrl}/login`, loginData).subscribe({
+    this.http.post<any>(this.apiUrl, loginData).subscribe({
       next: (response) => {
         this.isLoading = false;
         this.handleLoginSuccess(response);

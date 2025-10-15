@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     this.error = '';
 
     // 🎯 API ENDPOINT - Full URL construction
-    const apiUrl = `${this.apiBaseUrl}?specialty=Cardiologia&isAcceptingPatients=true&page=1&limit=10`;
+    const apiUrl = this.apiBaseUrl;
 
     this.http.get<any>(apiUrl)
       .subscribe({
