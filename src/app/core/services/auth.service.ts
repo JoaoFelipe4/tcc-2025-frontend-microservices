@@ -38,24 +38,19 @@ export class AuthService {
       const token = localStorage.getItem('auth_token');
       
       if (userData && token) {
-        console.log('Initializing auth state from localStorage:', JSON.parse(userData));
         this.currentUserSubject.next(JSON.parse(userData));
       } else {
-        console.log('No auth data found in localStorage');
         this.currentUserSubject.next(null);
       }
     }
   }
   
   login(email: string, password: string): Observable<LoginResponse> {
-    console.log('AuthService: Login attempt for:', email);
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
       tap(response => {
-        console.log('AuthService: Login response:', response);
         if (response.success && typeof window !== 'undefined') {
           localStorage.setItem('auth_token', response.token);
           localStorage.setItem('user_data', JSON.stringify(response.user));
-          console.log('AuthService: Setting current user to:', response.user);
           this.currentUserSubject.next(response.user);
         }
       })
@@ -63,7 +58,6 @@ export class AuthService {
   }
   
   logout(): void {
-    console.log('AuthService: Logging out');
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_data');

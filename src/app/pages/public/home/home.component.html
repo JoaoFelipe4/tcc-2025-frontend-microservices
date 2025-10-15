@@ -1,8 +1,8 @@
 <section class="hero">
   <div class="container">
     <div class="hero-content">
-      <h1>Bem-vindo ao Meu App</h1>
-      <p>Uma aplicação moderna desenvolvida em Angular com recursos incríveis.</p>
+      <h1>Encontre Seu Médico</h1>
+      <p>Agende consultas com os melhores profissionais de saúde.</p>
       <div class="hero-actions">
         <a routerLink="/sobre" class="btn btn-primary">Saiba Mais</a>
         <a routerLink="/login" class="btn btn-secondary">Fazer Login</a>
@@ -11,15 +11,42 @@
   </div>
 </section>
 
-<section class="features">
+<section class="doctors">
   <div class="container">
-    <h2>Recursos Principais</h2>
-    <div class="features-grid">
-      <div class="feature-card" *ngFor="let feature of features">
-        <div class="feature-icon">{{ feature.icon }}</div>
-        <h3>{{ feature.title }}</h3>
-        <p>{{ feature.description }}</p>
+    <h2>Nossos Médicos</h2>
+    
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      <p>Carregando médicos...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="error">
+      <p>{{ error }}</p>
+      <button (click)="loadDoctors()" class="btn btn-primary">Tentar Novamente</button>
+    </div>
+
+    <!-- Doctors Grid -->
+    <div class="doctors-grid" *ngIf="!loading && !error && doctors.length > 0">
+      <div class="doctor-card" *ngFor="let doctor of doctors">
+        <div class="doctor-icon">👨‍⚕️</div>
+        <h3>Dr. {{ doctor.user.firstName }} {{ doctor.user.lastName }}</h3>
+        <p><strong>CRM:</strong> {{ doctor.crm }}</p>
+        <p><strong>Especialidade:</strong> {{ doctor.specialties.join(', ') }}</p>
+        <p><strong>Consulta:</strong> R$ {{ doctor.consultationPrice }}</p>
+        <p><strong>Duração:</strong> {{ doctor.consultationDuration }}min</p>
+        <div class="doctor-status" [class.available]="doctor.isAcceptingPatients">
+          {{ doctor.isAcceptingPatients ? '🟢 Aceitando Pacientes' : '🔴 Lotado' }}
+        </div>
+        <button class="btn btn-primary" (click)="schedule(doctor)">
+          Agendar Consulta
+        </button>
       </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && doctors.length === 0" class="empty-state">
+      <p>Nenhum médico disponível no momento.</p>
     </div>
   </div>
 </section>
