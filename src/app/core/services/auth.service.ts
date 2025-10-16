@@ -1,4 +1,3 @@
-// auth.service.ts
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
@@ -14,7 +13,17 @@ interface LoginResponse {
     firstName: string;
     lastName: string;
     role: string;
+    profileId: string;
   };
+}
+
+interface User {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: string;
+  profileId: string;
 }
 
 @Injectable({
@@ -24,8 +33,11 @@ export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
   
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/';
-  private currentUserSubject = new BehaviorSubject<any>(null);
+  // Fixed: Removed trailing slash to avoid double slashes in URL
+  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init';
+  
+  // Fixed: Properly typed BehaviorSubject
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
   
   constructor() {
@@ -38,32 +50,58 @@ export class AuthService {
       const token = localStorage.getItem('auth_token');
       
       if (userData && token) {
-        this.currentUserSubject.next(JSON.parse(userData));
+        try {
+          this.currentUserSubject.next(JSON.parse(userData));
+        } catch (error) {
+          console.error('Error parsing user data from localStorage:', error);
+          this.clearAuthData();
+        }
       } else {
         this.currentUserSubject.next(null);
       }
     }
   }
   
-  login(email: string, password: string): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+  // Fixed: This method should be used by login component
+  login(credentials: { email: string; password: string }): Observable<any> {
+    return this.http.post<any>(this.apiUrl, credentials).pipe(
       tap(response => {
-        if (response.success && typeof window !== 'undefined') {
-          localStorage.setItem('auth_token', response.token);
-          localStorage.setItem('user_data', JSON.stringify(response.user));
-          this.currentUserSubject.next(response.user);
+        if (response.success) {
+          this.handleLoginSuccess(response);
         }
       })
     );
   }
+
+  // Fixed: Separate method to handle successful login
+  private handleLoginSuccess(response: any): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', response.token);
+      localStorage.setItem('user_data', JSON.stringify(response.user));
+      this.currentUserSubject.next(response.user);
+    }
+  }
+
+  // Fixed: Manual login method for when login happens outside this service
+  setUser(user: User, token: string): void {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('user_data', JSON.stringify(user));
+      this.currentUserSubject.next(user);
+    }
+  }
   
   logout(): void {
+    this.clearAuthData();
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/login']);
+  }
+
+  private clearAuthData(): void {
     if (typeof window !== 'undefined' && window.localStorage) {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_data');
     }
-    this.currentUserSubject.next(null);
-    this.router.navigate(['/login']);
   }
   
   isAuthenticated(): boolean {
@@ -76,7 +114,7 @@ export class AuthService {
     return localStorage.getItem('auth_token');
   }
   
-  getCurrentUser(): any {
+  getCurrentUser(): User | null {
     return this.currentUserSubject.value;
   }
 

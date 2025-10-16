@@ -15,6 +15,58 @@
   <div class="container">
     <h2>Nossos Médicos</h2>
     
+    <!-- Filters Section -->
+    <div class="filters" *ngIf="!loading && !error">
+      <div class="filter-group">
+        <label for="specialtyFilter">Filtrar por Especialidade:</label>
+        <select id="specialtyFilter" [(ngModel)]="selectedSpecialty" (change)="applyFilters()">
+          <option value="">Todas as especialidades</option>
+          <option *ngFor="let specialty of specialties" [value]="specialty">{{ specialty }}</option>
+        </select>
+      </div>
+      
+      <div class="filter-group">
+        <label for="availabilityFilter">Disponibilidade:</label>
+        <select id="availabilityFilter" [(ngModel)]="availabilityFilter" (change)="applyFilters()">
+          <option value="all">Todos os médicos</option>
+          <option value="true">Aceitando pacientes</option>
+          <option value="false">Não aceitando pacientes</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="limitFilter">Médicos por página:</label>
+        <select id="limitFilter" [(ngModel)]="limit" (change)="applyFilters()">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>
+
+      <div class="filter-group search-group">
+        <label for="searchFilter">Buscar por nome:</label>
+        <input 
+          type="text" 
+          id="searchFilter" 
+          placeholder="Digite o nome do médico..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()">
+      </div>
+
+      <button class="btn btn-primary" (click)="clearFilters()">Limpar Filtros</button>
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info" *ngIf="!loading && !error && doctors.length > 0">
+      <p>
+        Mostrando {{ displayedDoctors.length }} de {{ totalDoctors }} médico(s)
+        <span *ngIf="selectedSpecialty"> - Especialidade: {{ selectedSpecialty }}</span>
+        <span *ngIf="availabilityFilter !== 'all'"> - {{ availabilityFilter === 'true' ? 'Disponíveis' : 'Indisponíveis' }}</span>
+        <span *ngIf="searchTerm"> - Nome: "{{ searchTerm }}"</span>
+      </p>
+    </div>
+
     <!-- Loading State -->
     <div *ngIf="loading" class="loading">
       <p>Carregando médicos...</p>
@@ -27,8 +79,8 @@
     </div>
 
     <!-- Doctors Grid -->
-    <div class="doctors-grid" *ngIf="!loading && !error && doctors.length > 0">
-      <div class="doctor-card" *ngFor="let doctor of doctors">
+    <div class="doctors-grid" *ngIf="!loading && !error && displayedDoctors.length > 0">
+      <div class="doctor-card" *ngFor="let doctor of displayedDoctors">
         <div class="doctor-icon">👨‍⚕️</div>
         <h3>Dr. {{ doctor.user.firstName }} {{ doctor.user.lastName }}</h3>
         <p><strong>CRM:</strong> {{ doctor.crm }}</p>
@@ -44,7 +96,34 @@
       </div>
     </div>
 
-    <!-- Empty State -->
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="!loading && !error && displayedDoctors.length > 0 && totalPages > 1 && !searchTerm">
+      <button 
+        class="btn btn-primary" 
+        [disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)">
+        Anterior
+      </button>
+      
+      <span class="page-info">
+        Página {{ currentPage }} de {{ totalPages }}
+      </span>
+      
+      <button 
+        class="btn btn-primary" 
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)">
+        Próxima
+      </button>
+    </div>
+
+    <!-- Empty State after searching -->
+    <div *ngIf="!loading && !error && displayedDoctors.length === 0 && doctors.length > 0" class="empty-state">
+      <p>Nenhum médico encontrado com o nome "{{ searchTerm }}".</p>
+      <button class="btn btn-primary" (click)="clearSearch()">Limpar Busca</button>
+    </div>
+
+    <!-- Empty State no doctors -->
     <div *ngIf="!loading && !error && doctors.length === 0" class="empty-state">
       <p>Nenhum médico disponível no momento.</p>
     </div>

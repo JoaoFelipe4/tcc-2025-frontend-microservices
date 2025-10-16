@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { AuthService } from '../../../core/services/auth.service'; // Adjust path as needed
 
 @Component({
   selector: 'app-login',
@@ -12,66 +12,27 @@ import { firstValueFrom } from 'rxjs';
     CommonModule,
     FormsModule,
     RouterModule,
-    HttpClientModule // Add this for standalone component
+    HttpClientModule
   ],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  // Using inject() - Angular 14+ way
   private http = inject(HttpClient);
   private router = inject(Router);
+  private authService = inject(AuthService); // Inject AuthService
   
-  // Form data
   credentials = {
     email: '',
     password: ''
   };
   
-  // UI state
   isLoading = false;
   errorMessage = '';
   successMessage = '';
   
-  // API configuration - adjust this to your backend
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init'; // Change to your backend URL
+  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init';
   
-  // Main login method - async/await pattern for Vite
-  async login(): Promise<void> {
-    // Reset messages
-    this.errorMessage = '';
-    this.successMessage = '';
-    
-    // Validate
-    if (!this.validateForm()) {
-      return;
-    }
-    
-    // Start loading
-    this.isLoading = true;
-    
-    try {
-      // Make API call using firstValueFrom for async/await
-      const response = await firstValueFrom(
-        this.http.post<any>(this.apiUrl, {
-          email: this.credentials.email.trim().toLowerCase(),
-          password: this.credentials.password
-        })
-      );
-      
-      // Handle success
-      this.handleLoginSuccess(response);
-      
-    } catch (error: any) {
-      // Handle error
-      this.handleLoginError(error);
-    } finally {
-      // Stop loading
-      this.isLoading = false;
-    }
-  }
-  
-  // Alternative: Using subscribe (if async/await doesn't work)
   loginWithSubscribe(): void {
     this.errorMessage = '';
     this.successMessage = '';
@@ -99,7 +60,6 @@ export class LoginComponent {
     });
   }
   
-  // Form validation
   private validateForm(): boolean {
     if (!this.credentials.email) {
       this.errorMessage = 'Por favor, insira seu email.';
@@ -125,39 +85,33 @@ export class LoginComponent {
     return true;
   }
   
-  // Handle successful login
   private handleLoginSuccess(response: any): void {
     if (!response.success) {
       this.errorMessage = 'Resposta inválida do servidor.';
       return;
     }
     
-    // Save token
-    if (typeof window !== 'undefined' && window.localStorage) {
-      localStorage.setItem('auth_token', response.token);
-      
-      // Save user data
-      const userData = {
-        id: response.user.id,
-        email: response.user.email,
-        firstName: response.user.firstName,
-        lastName: response.user.lastName,
-        role: response.user.role
-      };
-      localStorage.setItem('user_data', JSON.stringify(userData));
-      
-      // Show success
-      this.successMessage = 'Login realizado com sucesso! Redirecionando...';
-      
-      // Navigate after delay
-      setTimeout(() => {
-        const targetRoute = this.getRouteByRole(userData.role);
-        this.router.navigate([targetRoute]);
-      }, 1000);
-    }
+    // FIXED: Use AuthService to set user data - this will update the header
+    const userData = {
+      id: response.user.id,
+      email: response.user.email,
+      firstName: response.user.firstName,
+      lastName: response.user.lastName,
+      role: response.user.role,
+      profileId: response.user.profileId
+    };
+    
+    // This is the key line that fixes the header update issue
+    this.authService.setUser(userData, response.token);
+    
+    this.successMessage = 'Login realizado com sucesso! Redirecionando...';
+    
+    setTimeout(() => {
+      const targetRoute = this.getRouteByRole(userData.role);
+      this.router.navigate([targetRoute]);
+    }, 1000);
   }
   
-  // Get route based on user role
   private getRouteByRole(role: string): string {
     switch (role) {
       case 'admin':
@@ -171,7 +125,6 @@ export class LoginComponent {
     }
   }
   
-  // Handle login error
   private handleLoginError(error: any): void {
     console.error('Login error:', error);
     
@@ -186,21 +139,7 @@ export class LoginComponent {
     }
   }
   
-  // Form submit
   onSubmit(): void {
-    // Use the subscribe version for better compatibility
-    this.loginWithSubscribe();
-  }
-  
-  // Quick test logins
-  quickLogin(type: 'patient' | 'doctor'): void {
-    if (type === 'patient') {
-      this.credentials.email = 'patient@test.com';
-      this.credentials.password = 'Test123!';
-    } else {
-      this.credentials.email = 'doctor@test.com';
-      this.credentials.password = 'Test123!';
-    }
     this.loginWithSubscribe();
   }
 }

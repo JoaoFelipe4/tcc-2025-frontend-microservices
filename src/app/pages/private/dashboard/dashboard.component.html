@@ -1,56 +1,146 @@
 <div class="dashboard-container">
+  <!-- Error Message -->
+  <div class="error-message" *ngIf="error">
+    <div class="error-content">
+      <span class="error-icon">⚠️</span>
+      <span>{{ error }}</span>
+      <button class="retry-btn" (click)="reloadData()">Tentar Novamente</button>
+    </div>
+  </div>
+
   <div class="dashboard-header">
-    <h1>Dashboard</h1>
-    <p>Bem-vindo, {{ currentUser?.firstName }}!</p>
+    <h1>Dashboard do Paciente</h1>
+    <p>Bem-vindo, {{ currentUser?.firstName }} {{ currentUser?.lastName }}!</p>
+    <div class="patient-basic-info" *ngIf="patientData">
+      <small class="patient-info-line">
+        {{ getAge(patientData.dateOfBirth) }} anos • 
+        {{ patientData.bloodType || 'Tipo sanguíneo não informado' }} • 
+        CPF: {{ patientData.cpf || 'Não informado' }}
+      </small>
+      <small class="patient-info-line" *ngIf="patientData.dateOfBirth">
+        Data de Nascimento: {{ formatDate(patientData.dateOfBirth) }}
+      </small>
+    </div>
   </div>
 
   <section class="stats-section">
-    <h2>Estatísticas</h2>
+    <h2>Resumo de Saúde</h2>
     <div class="stats-grid">
       <div class="stat-card" *ngFor="let stat of stats">
         <div class="stat-icon">{{ stat.icon }}</div>
         <div class="stat-info">
           <h3>{{ stat.title }}</h3>
-          <p class="stat-value">{{ stat.value }}</p>
+          <p class="stat-value" *ngIf="!stat.loading">{{ stat.value }}</p>
+          <div class="loading-skeleton" *ngIf="stat.loading">
+            <div class="skeleton-line"></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <div class="dashboard-content">
-    <section class="recent-activities">
-      <h2>Atividades Recentes</h2>
-      <div class="activities-list">
-        <div class="activity-item" *ngFor="let activity of recentActivities">
-          <div class="activity-dot"></div>
-          <div class="activity-content">
-            <p class="activity-action">{{ activity.action }}</p>
-            <span class="activity-time">{{ activity.time }}</span>
+    <!-- Left Column -->
+    <div class="left-column">
+      <section class="recent-activities">
+        <h2>Histórico Médico Recente</h2>
+        <div class="activities-list" *ngIf="recentActivities.length > 0; else noActivities">
+          <div class="activity-item" *ngFor="let activity of recentActivities">
+            <div class="activity-dot"></div>
+            <div class="activity-content">
+              <p class="activity-action">{{ activity.action }}</p>
+              <span class="activity-time">{{ activity.time }}</span>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+        <ng-template #noActivities>
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>Nenhum histórico médico registrado</p>
+          </div>
+        </ng-template>
+      </section>
 
-    <section class="quick-actions">
-      <h2>Ações Rápidas</h2>
-      <div class="actions-grid">
-        <button class="action-btn">
-          <span class="action-icon">➕</span>
-          <span>Novo Usuário</span>
-        </button>
-        <button class="action-btn">
-          <span class="action-icon">📊</span>
-          <span>Relatórios</span>
-        </button>
-        <button class="action-btn">
-          <span class="action-icon">⚙️</span>
-          <span>Configurações</span>
-        </button>
-        <button class="action-btn">
-          <span class="action-icon">👥</span>
-          <span>Equipe</span>
-        </button>
-      </div>
-    </section>
+      <section class="medications-section" *ngIf="patientData?.medications?.length > 0">
+        <h2>Medicações Ativas</h2>
+        <div class="medications-list">
+          <div class="medication-item" *ngFor="let med of patientData.medications">
+            <div class="medication-icon">💊</div>
+            <div class="medication-info">
+              <h4>{{ med.name }}</h4>
+              <p>{{ med.dosage }} • {{ med.frequency }}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="allergies-section" *ngIf="patientData?.allergies?.length > 0">
+        <h2>Alergias</h2>
+        <div class="allergies-list">
+          <div class="allergy-item" *ngFor="let allergy of patientData.allergies">
+            <div class="allergy-icon">⚠️</div>
+            <span class="allergy-name">{{ allergy }}</span>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column -->
+    <div class="right-column">
+      <section class="quick-actions">
+        <h2>Ações Rápidas</h2>
+        <div class="actions-grid">
+          <button class="action-btn" (click)="viewMedications()">
+            <span class="action-icon">💊</span>
+            <span>Minhas Medicações</span>
+          </button>
+          <button class="action-btn" (click)="viewMedicalHistory()">
+            <span class="action-icon">📋</span>
+            <span>Histórico Médico</span>
+          </button>
+          <button class="action-btn" (click)="updateProfile()">
+            <span class="action-icon">👤</span>
+            <span>Atualizar Perfil</span>
+          </button>
+          <button class="action-btn" (click)="contactEmergency()" 
+                  [disabled]="!patientData?.emergencyContact">
+            <span class="action-icon">🆘</span>
+            <span>Contato de Emergência</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="emergency-contact" *ngIf="patientData?.emergencyContact">
+        <h2>Contato de Emergência</h2>
+        <div class="contact-card">
+          <div class="contact-icon">👤</div>
+          <div class="contact-info">
+            <h4>{{ patientData.emergencyContact.name }}</h4>
+            <p>{{ patientData.emergencyContact.relationship }}</p>
+            <p class="contact-phone">{{ patientData.emergencyContact.phone }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="insurance-info" *ngIf="patientData?.insuranceInfo">
+        <h2>Convênio Médico</h2>
+        <div class="insurance-card">
+          <div class="insurance-icon">🏥</div>
+          <div class="insurance-info">
+            <h4>{{ patientData.insuranceInfo.provider }}</h4>
+            <p>Nº: {{ patientData.insuranceInfo.policyNumber }}</p>
+            <p class="insurance-validity" [class.expired]="getInsuranceStatus() === 'Expirado'">
+              Válido até: {{ formatDate(patientData.insuranceInfo.validUntil) }}
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Carregando dados do paciente...</p>
   </div>
 </div>
