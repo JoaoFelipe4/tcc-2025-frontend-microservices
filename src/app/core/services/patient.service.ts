@@ -7,7 +7,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PatientService {
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init/patients'; // Adjust to your API URL
+  private apiUrl = 'https://ewidx5waq3.execute-api.us-east-2.amazonaws.com/api/patients'; // Adjust to your API URL
 
   constructor(
     private http: HttpClient,

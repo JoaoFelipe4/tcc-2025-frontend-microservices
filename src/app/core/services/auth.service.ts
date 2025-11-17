@@ -34,7 +34,7 @@ export class AuthService {
   private router = inject(Router);
   
   // Fixed: Removed trailing slash to avoid double slashes in URL
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init';
+  private apiUrl = 'https://ewidx5waq3.execute-api.us-east-2.amazonaws.com';
   
   // Fixed: Properly typed BehaviorSubject
   private currentUserSubject = new BehaviorSubject<User | null>(null);

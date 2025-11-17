@@ -31,7 +31,7 @@ export class LoginComponent {
   errorMessage = '';
   successMessage = '';
   
-  private apiUrl = 'https://tciz3mxmuh.execute-api.us-east-2.amazonaws.com/init';
+  private apiUrl = 'https://ewidx5waq3.execute-api.us-east-2.amazonaws.com/api/auth/login';
   
   loginWithSubscribe(): void {
     this.errorMessage = '';
