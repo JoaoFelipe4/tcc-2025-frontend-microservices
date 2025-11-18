@@ -57,7 +57,7 @@ export class HomeComponent implements OnInit {
   private searchTimeout: any;
 
   // API configuration
-  private apiBaseUrl = 'https://ewidx5waq3.execute-api.us-east-2.amazonaws.com/api/doctors';
+  private apiBaseUrl = 'https://dibx20qa50.execute-api.us-east-2.amazonaws.com/api/doctors';
 
   constructor(private http: HttpClient) {}
 

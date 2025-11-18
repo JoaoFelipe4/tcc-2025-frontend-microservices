@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://3.133.126.225/'; // Ajuste para seu backend
+  private apiUrl = 'https://dibx20qa50.execute-api.us-east-2.amazonaws.com'; // Ajuste para seu backend
 
   constructor(private http: HttpClient) {}
 

@@ -58,7 +58,7 @@ export class RegisterComponent {
   errorMessage = '';
   successMessage = '';
   
-  private apiUrl = 'https://ewidx5waq3.execute-api.us-east-2.amazonaws.com/api/auth/register';
+  private apiUrl = 'https://dibx20qa50.execute-api.us-east-2.amazonaws.com/api/auth/register';
   
   setUserType(type: 'patient' | 'doctor'): void {
     this.userType = type;
